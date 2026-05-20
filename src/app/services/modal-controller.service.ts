@@ -22,8 +22,8 @@ export class ModalControllerService {
       data: {
         mode: 'create',
         formValues: {
-          nome: '',
-          descricao: '',
+          name: '',
+          description: '',
         },
       },
     });

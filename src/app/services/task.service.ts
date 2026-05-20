@@ -58,10 +58,31 @@ export class TaskService {
       );
       currentTaskList.next([...currentTaskListWithoutTask]);
 
+      nextTaskList.next([...nextTaskList.value, { ...currentTask }]);
+    }
+  }
 
-      nextTaskList.next([...nextTaskList.value, {...currentTask}]);
+  updateTaskNameAndDescription(
+    taskId: string,
+    taskCurrentsStatus: TaskStatus,
+    newTaskName: string,
+    newTaskDescription: string,
+  ) {
+    const currentTaskList = this.getTaskListByStatus(taskCurrentsStatus);
+    const currentTaskIndex = currentTaskList.value.findIndex(
+      (task) => task.id === taskId,
+    );
 
+    if (currentTaskIndex > -1) {
+      const updateTaskList = [...currentTaskList.value];
 
+      updateTaskList[currentTaskIndex] = {
+        ...updateTaskList[currentTaskIndex],
+        name: newTaskName,
+        description: newTaskDescription,
+      };
+
+      currentTaskList.next(updateTaskList);
     }
   }
 
