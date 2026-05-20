@@ -1,27 +1,45 @@
 <div class="p-3 mb-6 flex overflow-x-auto scrollbar-hidden ">
-  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6">
+  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6" cdkDropList #todoListCdkDropList="cdkDropList"
+    [cdkDropListData]="todoTasks" [cdkDropListConnectedTo]="[doingListCdkDropList , doneListCdkDropList]"
+    (cdkDropListDropped)="drop($event)">
     <div class="py-2 border-b border-[#d1d5db] flex items-center gap-1">
       <h1 class="font-bold">A fazer</h1>
       <samp class="text-xs font-semibold text-white bg-black py-1 px-2 rounded-xl">1</samp>
     </div>
-    <app-task-card></app-task-card>
-    <app-task-card></app-task-card>
-    <app-task-card></app-task-card>
+    @for(todoTask of todoTasks; track todoTask.id){
+     <app-task-card cdkDrag />
+
+    }
+
   </div>
-  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6">
+  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6"
+    cdkDropList
+   #doingListCdkDropList="cdkDropList"
+    [cdkDropListData]="doingTasks"
+    [cdkDropListConnectedTo]="[todoListCdkDropList, doneListCdkDropList]"
+    (cdkDropListDropped)="drop($event)">
     <div class="py-2 border-b border-[#d1d5db] flex items-center gap-1">
-      <h1 class="font-bold">A fazer</h1>
+      <h1 class="font-bold">Fazendo</h1>
       <samp class="text-xs font-semibold text-white bg-[#ff850a] py-1 px-2 rounded-xl">1</samp>
     </div>
-    <app-task-card></app-task-card>
-    <app-task-card></app-task-card>
+    @for (doingTask of doingTasks; track doingTask.id) {
+    <app-task-card cdkDrag />
+
+    }
   </div>
-  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6">
+  <div class="flex-1 py-3 px-6 min-w-60 flex flex-col gap-6"
+   cdkDropList
+   #doneListCdkDropList="cdkDropList"
+    [cdkDropListData]="doneTasks"
+    [cdkDropListConnectedTo]="[todoListCdkDropList, doingListCdkDropList]"
+    (cdkDropListDropped)="drop($event)">
     <div class="py-2 border-b border-[#d1d5db] flex items-center gap-1">
-      <h1 class="font-bold">A fazer</h1>
+      <h1 class="font-bold">Feito</h1>
       <samp class="text-xs font-semibold text-white bg-[#15be78] py-1 px-2 rounded-xl">1</samp>
     </div>
-    <app-task-card></app-task-card>
+    @for (doneTasks of doneTasks; track doneTasks.id) {
+      <app-task-card cdkDrag />
+    }
   </div>
 </div>
 
