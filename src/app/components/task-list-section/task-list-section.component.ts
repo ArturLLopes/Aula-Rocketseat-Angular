@@ -48,8 +48,7 @@ export class TaskListSectionComponent {
       default:
         throw Error('Coluna inválida')
     }
-
-
+    this._taskService.updateTaskStatus(taskId, taskCurrentStauts, taskNextStatus);
 
   }
 

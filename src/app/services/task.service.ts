@@ -4,6 +4,7 @@ import { ITask } from '../interfaces/task.interface';
 import { ITaskFormControls } from '../interfaces/task-form-controls.interface';
 import { TaskStatusEnum } from '../enums/task-status.enum';
 import { generateUniqueIdWithTimestamp } from '../utils/generate-unique-id-with-timestamps';
+import { TaskStatus } from '../types/task-status';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +38,39 @@ export class TaskService {
     this.todoTask$.next([...currentList, newTask]);
   }
 
-  carregarListaAtualDeTodos(){
-    console.log('carregarListaAtualDeTodos', this.todoTask$.value)
+  updateTaskStatus(
+    taskId: string,
+    taskCurrentStauts: TaskStatus,
+    taskNextStatus: TaskStatus,
+  ) {
+    const currentTaskList = this.getTaskListByStatus(taskCurrentStauts);
+    const nextTaskList = this.getTaskListByStatus(taskNextStatus);
+
+    const currentTask = currentTaskList.value.find(
+      (task) => task.id === taskId,
+    );
+
+    if (currentTask) {
+      currentTask.status = taskNextStatus;
+
+      const currentTaskListWithoutTask = currentTaskList.value.filter(
+        (task) => task.id !== taskId,
+      );
+      currentTaskList.next([...currentTaskListWithoutTask]);
+
+
+      nextTaskList.next([...nextTaskList.value, {...currentTask}]);
+
+
+    }
+  }
+
+  private getTaskListByStatus(taskStatus: TaskStatus) {
+    const taskListObj = {
+      [TaskStatusEnum.TODO]: this.todoTask$,
+      [TaskStatusEnum.DOING]: this.doingTask$,
+      [TaskStatusEnum.DONE]: this.doneTask$,
+    };
+    return taskListObj[taskStatus];
   }
 }
