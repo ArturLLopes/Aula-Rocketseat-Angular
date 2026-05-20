@@ -9,48 +9,63 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { ITask } from '../../interfaces/task.interface';
+import { AsyncPipe } from '@angular/common';
+import { TaskStatus } from '../../types/task-status';
+import { TaskStatusEnum } from '../../enums/task-status.enum';
 
 @Component({
   selector: 'app-task-list-section',
-  imports: [TaskCardComponent, CdkDropList, CdkDrag],
+  imports: [TaskCardComponent, CdkDropList, CdkDrag, AsyncPipe],
   templateUrl: './task-list-section.component.html',
   styleUrl: './task-list-section.component.css',
 })
 export class TaskListSectionComponent {
+  readonly _taskService = inject(TaskService);
 
-  todoTasks:  ITask[] = [];
-  doingTasks:  ITask[] = [];
-  doneTasks:  ITask[] = [];
+  onCardDrop(event: CdkDragDrop<ITask[]>) {
+    this.moveCardToColumn(event);
 
-  private readonly _taskService = inject(TaskService);
+    const taskId = event.item.data.id;
+    const taskCurrentStauts = event.item.data.status;
+    const droppedColumn = event.container.id;
 
-  ngOnInit() {
-    this._taskService.todoTask.subscribe((todoList) => {
-      this.todoTasks = todoList;
-    });
-
-    this._taskService.doingTask.subscribe((doingList) => {
-      this.doingTasks = doingList;
-    });
-
-    this._taskService.doneTask.subscribe((doneList) => {
-      this.doneTasks = doneList;
-    });
+    this.updateTaskStatus(taskId, taskCurrentStauts, droppedColumn);
   }
 
-  drop(event: CdkDragDrop<ITask[]>) {
+  private updateTaskStatus(taskId: string, taskCurrentStauts: TaskStatus, droppedColumn: string) {
+    let taskNextStatus: TaskStatus;
+
+    switch (droppedColumn) {
+      case 'to-do-column':
+        taskNextStatus = TaskStatusEnum.TODO;
+        break;
+      case 'doing-column':
+        taskNextStatus = TaskStatusEnum.DOING;
+        break;
+      case 'done-column':
+        taskNextStatus = TaskStatusEnum.DONE;
+        break;
+      default:
+        throw Error('Coluna inválida')
+    }
+
+
+
+  }
+
+  private moveCardToColumn(event: CdkDragDrop<ITask[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     }
   }
