@@ -16,7 +16,7 @@
       </samp>
     </div>
     @for(todoTask of todoTasks; track todoTask.id){
-    <app-task-card cdkDrag [cdkDragData]="todoTask" />
+    <app-task-card cdkDrag [cdkDragData]="todoTask" [task]="todoTask"/>
 
     }
 
@@ -29,7 +29,7 @@
       <samp class="text-xs font-semibold text-white bg-[#ff850a] py-1 px-2 rounded-xl">{{ doingTasks.length }}</samp>
     </div>
     @for (doingTask of doingTasks; track doingTask.id) {
-    <app-task-card cdkDrag [cdkDragData]="doingTask" />
+    <app-task-card cdkDrag [cdkDragData]="doingTask" [task]="doingTask"/>
 
     }
   </div>
@@ -41,7 +41,7 @@
       <samp class="text-xs font-semibold text-white bg-[#15be78] py-1 px-2 rounded-xl">{{ doneTasks.length }}</samp>
     </div>
     @for (doneTask of doneTasks; track doneTask.id) {
-    <app-task-card cdkDrag [cdkDragData]="doneTask" />
+    <app-task-card cdkDrag [cdkDragData]="doneTask" [task]="doneTask"/>
     }
   </div>
 </div>
