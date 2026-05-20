@@ -2,7 +2,7 @@
   <div class="p-4 flex gap-1">
     <img src="images/icon-task-star.svg" alt="">
     <h1>Comentar tarefa</h1>
-    <img src="images/icon-close.svg" alt="">
+    <img class="ml-auto cursor-pointer" (click)="closeModal()" src="images/icon-close.svg" alt="">
   </div>
   <div class="p-4 border-t border-[#d1d5db]">
     <h1 class="font-semibold text-lg mb-4">Minha nova tarefa</h1>
@@ -23,40 +23,22 @@
         <button
           class="py-3 px-4 bg-[#2a89ef] rounded-xl text-sm font-semibold cursor-pointer active:translate-y-1 transition-transform duration-75 shadow-md  shadow-blue-500/50">Adicionar</button>
       </div>
+
       <div class="flex flex-col gap-5 overflow-scroll max-h-44 scrollbar-hidden">
-        <div class="flex flex-col gap-3 border-b border-[#d1d5db]">
+        @for (comment of _task.comments; track comment.id; let last = $last) {
+        <div class="{{`flex flex-col gap-3 ${ !last ? 'border-b border-[#d1d5db]' : ''}`}}">
           <div>
-            <p class="font-light text-sm text-[#374141]">Já finalizei!</p>
+            <p class="font-light text-sm text-[#374141]">{{ comment.description}}</p>
           </div>
-          <div class="flex gap-4 mb-3">
-            <p class="font-normal text-xs text-[#9ca3af]">Comentado há 10 min atrás</p>
+          <div class="{{ `flex gap-4 ${ !last ? 'mb-3' : '' }` }}">
+            <p class="font-normal text-xs text-[#9ca3af]">Comentado</p>
             <p class="font-semibold text-xs underline underline-offset-2 cursor-pointer">Apagar</p>
           </div>
         </div>
-      </div>
-      <div class="flex flex-col gap-5 overflow-scroll max-h-44 scrollbar-hidden">
-        <div class="flex flex-col gap-3 border-b border-[#d1d5db]">
-          <div>
-            <p class="font-light text-sm text-[#374141]">Já finalizei!</p>
-          </div>
-          <div class="flex gap-4 mb-3">
-            <p class="font-normal text-xs text-[#9ca3af]">Comentado há 10 min atrás</p>
-            <p class="font-semibold text-xs underline underline-offset-2 cursor-pointer">Apagar</p>
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-col gap-5 overflow-scroll max-h-44 scrollbar-hidden">
-        <div class="flex flex-col gap-3">
-          <div>
-            <p class="font-light text-sm text-[#374141]">Já finalizei!</p>
-          </div>
-          <div class="flex gap-4 mb-3">
-            <p class="font-normal text-xs text-[#9ca3af]">Comentado há 10 min atrás</p>
-            <p class="font-semibold text-xs underline underline-offset-2 cursor-pointer">Apagar</p>
-          </div>
-        </div>
+
+        }
+
       </div>
     </div>
   </div>
-
 </div>

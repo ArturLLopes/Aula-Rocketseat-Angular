@@ -32,4 +32,9 @@ export class TaskCardComponent {
       }
     });
   }
+
+  openCommentsModal() {
+    this.task.comments = [{ id: '123', description: 'Meu comentario' }];
+    this._modalControllerService.openTaskCommentsModal(this.task);
+  }
 }

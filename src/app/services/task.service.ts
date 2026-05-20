@@ -5,6 +5,7 @@ import { ITaskFormControls } from '../interfaces/task-form-controls.interface';
 import { TaskStatusEnum } from '../enums/task-status.enum';
 import { generateUniqueIdWithTimestamp } from '../utils/generate-unique-id-with-timestamps';
 import { TaskStatus } from '../types/task-status';
+import { IComment } from '../interfaces/comment.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +85,30 @@ export class TaskService {
 
       currentTaskList.next(updateTaskList);
     }
+  }
+
+  updateTaskComments(
+    taskId: string,
+    taskCurrentStatus: TaskStatus,
+    newTaskComments: IComment[],
+  ) {
+    const currentTaskList = this.getTaskListByStatus(taskCurrentStatus);
+    const currentTaskIndex = currentTaskList.value.findIndex(
+      (task) => task.id === taskId,
+    );
+
+    if (currentTaskIndex > -1){
+      const updateTaskList = [...currentTaskList.value];
+
+      updateTaskList[currentTaskIndex] = {
+        ...updateTaskList[currentTaskIndex],
+        comments: [...newTaskComments],
+      };
+
+      currentTaskList.next(updateTaskList);
+    }
+
+
   }
 
   private getTaskListByStatus(taskStatus: TaskStatus) {
