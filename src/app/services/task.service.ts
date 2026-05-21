@@ -97,7 +97,7 @@ export class TaskService {
       (task) => task.id === taskId,
     );
 
-    if (currentTaskIndex > -1){
+    if (currentTaskIndex > -1) {
       const updateTaskList = [...currentTaskList.value];
 
       updateTaskList[currentTaskIndex] = {
@@ -107,8 +107,16 @@ export class TaskService {
 
       currentTaskList.next(updateTaskList);
     }
+  }
 
+  deleteTask(taskId: string, taskCurrentStatus: TaskStatus) {
+    const currentTaskList = this.getTaskListByStatus(taskCurrentStatus);
 
+    const newTaskList = currentTaskList.value.filter(
+      (task) => task.id !== taskId,
+    );
+
+    currentTaskList.next(newTaskList);
   }
 
   private getTaskListByStatus(taskStatus: TaskStatus) {
