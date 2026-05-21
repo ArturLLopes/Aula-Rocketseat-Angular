@@ -22,17 +22,26 @@ import { TaskStatusEnum } from '../../enums/task-status.enum';
 export class TaskListSectionComponent {
   readonly _taskService = inject(TaskService);
 
+  // Método principal disparado pelo evento de soltar (drop) do CDK
   onCardDrop(event: CdkDragDrop<ITask[]>) {
+    // 1. Atualiza a posição visual do card no array local
     this.moveCardToColumn(event);
 
+    // 2. Extrai as informações necessárias do item arrastado e do destino
     const taskId = event.item.data.id;
-    const taskCurrentStauts = event.item.data.status;
+    const taskCurrentStatus = event.item.data.status;
     const droppedColumn = event.container.id;
 
-    this.updateTaskStatus(taskId, taskCurrentStauts, droppedColumn);
+    // 3. Sincroniza a mudança com o serviço (estado global/localStorage)
+    this.updateTaskStatus(taskId, taskCurrentStatus, droppedColumn);
   }
 
-  private updateTaskStatus(taskId: string, taskCurrentStauts: TaskStatus, droppedColumn: string) {
+  // Traduz o ID do container HTML para o Enum de status da regra de negócio
+  private updateTaskStatus(
+    taskId: string,
+    taskCurrentStatus: TaskStatus,
+    droppedColumn: string,
+  ) {
     let taskNextStatus: TaskStatus;
 
     switch (droppedColumn) {
@@ -46,13 +55,19 @@ export class TaskListSectionComponent {
         taskNextStatus = TaskStatusEnum.DONE;
         break;
       default:
-        throw Error('Coluna inválida')
+        throw Error('Coluna inválida');
     }
-    this._taskService.updateTaskStatus(taskId, taskCurrentStauts, taskNextStatus);
 
+    this._taskService.updateTaskStatus(
+      taskId,
+      taskCurrentStatus,
+      taskNextStatus,
+    );
   }
 
+  // Lógica de manipulação de arrays do CDK para refletir a mudança na UI
   private moveCardToColumn(event: CdkDragDrop<ITask[]>) {
+    // Se o item foi solto na mesma coluna, apenas reordena o array
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -60,6 +75,7 @@ export class TaskListSectionComponent {
         event.currentIndex,
       );
     } else {
+      // Se mudou de coluna, transfere o item de um array para o outro
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
